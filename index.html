@@ -1,12 +1,989 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SIAGAR - Absensi Guru</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MBS Studio — Jasa Pembuatan Website Profesional, Harga Bisa Nego</title>
+<meta name="description" content="MBS Studio oleh Maulana Bayu Satria — jasa pembuatan website profesional, modern, dan responsif dengan harga terjangkau dan bisa dinegosiasikan.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#FCFAFF;
+  --bg-soft:#F3EEFF;
+  --surface:#FFFFFF;
+  --line:rgba(21,15,46,0.10);
+  --line-strong:rgba(21,15,46,0.20);
+  --ink:#150F2E;
+  --muted:#5B5478;
+  --muted-2:#8B84A8;
+  --primary:#6C4CF1;
+  --primary-2:#4B2FD1;
+  --coral:#FF6152;
+  --mint:#0FAF7E;
+  --yellow:#FFC94A;
+  --grad-1: linear-gradient(120deg,#6C4CF1 0%, #9B6BFF 55%, #4B2FD1 100%);
+  --grad-warm: linear-gradient(120deg,#FF6152, #FF9152);
+  --shadow-lg: 0 30px 70px -24px rgba(76,45,209,0.28);
+  --shadow-sm: 0 10px 26px -12px rgba(76,45,209,0.22);
+  --radius: 20px;
+  --font-display:'Sora', sans-serif;
+  --font-body:'Plus Jakarta Sans', sans-serif;
+  --font-util:'JetBrains Mono', monospace;
+  --ease: cubic-bezier(.16,.8,.24,1);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:auto;}
+::selection{background:var(--primary);color:#fff;}
+
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  overflow-x:hidden;
+  line-height:1.65;
+  cursor:none;
+}
+@media (max-width:900px){ body{cursor:auto;} }
+
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer;}
+ul{list-style:none;}
+
+.wrap{ width:min(1180px, 92%); margin:0 auto; }
+.eyebrow{
+  font-family:var(--font-util);
+  font-size:12px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--primary-2);
+  font-weight:700;
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:16px;
+}
+.eyebrow::before{ content:''; width:26px;height:2px; background:var(--grad-warm); border-radius:2px; }
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:-0.02em;}
+.section-title{ font-size:clamp(28px,4.4vw,44px); font-weight:700; margin-bottom:14px; color:var(--ink); }
+.section-title em{
+  font-style:normal;
+  background:var(--grad-1);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.section-sub{ color:var(--muted); max-width:560px; font-size:15.5px; margin-bottom:56px; }
+section{position:relative;padding:120px 0;}
+@media (max-width:768px){ section{padding:80px 0;} }
+.section-alt{background:var(--bg-soft);}
+
+.reveal{opacity:0; transform:translateY(32px); transition:opacity .8s var(--ease), transform .8s var(--ease);}
+.reveal.in{opacity:1; transform:translateY(0);}
+.reveal-stagger > * { opacity:0; transform:translateY(26px); transition:opacity .65s var(--ease), transform .65s var(--ease); }
+.reveal-stagger.in > *{ opacity:1; transform:translateY(0); }
+.reveal-stagger.in > *:nth-child(1){transition-delay:.03s;}
+.reveal-stagger.in > *:nth-child(2){transition-delay:.09s;}
+.reveal-stagger.in > *:nth-child(3){transition-delay:.15s;}
+.reveal-stagger.in > *:nth-child(4){transition-delay:.21s;}
+.reveal-stagger.in > *:nth-child(5){transition-delay:.27s;}
+.reveal-stagger.in > *:nth-child(6){transition-delay:.33s;}
+
+/* glass (light) */
+.glass{
+  background:linear-gradient(160deg, rgba(255,255,255,0.92), rgba(255,255,255,0.72));
+  border:1px solid var(--line);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-sm);
+}
+.glass-strong{ background:#fff; border:1px solid var(--line-strong); }
+
+/* ============ LOADER ============ */
+#loader{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px;
+  transition:opacity .8s var(--ease), visibility .8s var(--ease);
+}
+#loader.hide{opacity:0;visibility:hidden;}
+.loader-mark{
+  font-family:var(--font-display); font-size:15vw; font-weight:800; line-height:1;
+  background:var(--grad-1); -webkit-background-clip:text;background-clip:text;color:transparent;
+  letter-spacing:-0.03em; animation:markPulse 1.8s var(--ease) infinite;
+}
+@media (min-width:700px){ .loader-mark{font-size:88px;} }
+@keyframes markPulse{ 0%,100%{filter:drop-shadow(0 0 16px rgba(108,76,241,.30));} 50%{filter:drop-shadow(0 0 30px rgba(255,97,82,.45));} }
+.loader-bar{width:220px;height:3px;background:rgba(21,15,46,.08);border-radius:3px;overflow:hidden;}
+.loader-bar span{display:block;height:100%;width:0%;background:var(--grad-1);animation:loadBar 1.6s var(--ease) forwards;}
+@keyframes loadBar{ to{width:100%;} }
+.loader-label{font-family:var(--font-util);font-size:11px;letter-spacing:.28em;color:var(--muted-2);text-transform:uppercase;}
+
+/* ============ CURSOR ============ */
+#cursor-dot, #cursor-ring{ position:fixed;top:0;left:0;pointer-events:none;z-index:9998; border-radius:50%; transform:translate(-50%,-50%); will-change:transform; }
+#cursor-dot{width:7px;height:7px;background:var(--coral);}
+#cursor-ring{ width:34px;height:34px;border:1.5px solid rgba(108,76,241,0.55); transition:width .25s var(--ease), height .25s var(--ease), border-color .25s var(--ease), background .25s var(--ease); }
+#cursor-ring.big{width:64px;height:64px;background:rgba(108,76,241,0.08);border-color:rgba(255,97,82,.6);}
+@media (max-width:900px){ #cursor-dot,#cursor-ring{display:none;} }
+
+/* ============ BACKDROP FX ============ */
+#particles{position:fixed;inset:0;z-index:0;}
+.aurora{
+  position:fixed;inset:-20%;z-index:0;
+  background:
+    radial-gradient(38% 32% at 15% 15%, rgba(108,76,241,0.16), transparent 60%),
+    radial-gradient(34% 28% at 85% 10%, rgba(255,97,82,0.14), transparent 60%),
+    radial-gradient(42% 36% at 60% 85%, rgba(255,201,74,0.16), transparent 60%);
+  filter:blur(60px);
+  animation:auroraShift 22s ease-in-out infinite alternate;
+  pointer-events:none;
+}
+@keyframes auroraShift{ 0%{ transform:translate(0,0) rotate(0deg) scale(1); } 100%{ transform:translate(3%,-4%) rotate(8deg) scale(1.08); } }
+.grid-overlay{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image: linear-gradient(rgba(21,15,46,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(21,15,46,0.045) 1px, transparent 1px);
+  background-size:56px 56px;
+  mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
+}
+#scroll-progress{ position:fixed;top:0;left:0;height:3px;background:var(--grad-1);z-index:9997;width:0%; box-shadow:0 0 12px rgba(108,76,241,.55); }
+
+/* ============ NAVBAR ============ */
+#navbar{ position:fixed;top:0;left:0;right:0;z-index:900; padding:20px 0; transition:transform .5s var(--ease), padding .4s var(--ease), background .4s var(--ease), border-color .4s var(--ease); border-bottom:1px solid transparent; }
+#navbar.scrolled{ padding:12px 0; background:rgba(252,250,255,0.78); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }
+#navbar.hide-nav{transform:translateY(-110%);}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;}
+.logo{ font-family:var(--font-display);font-weight:800;font-size:19px;letter-spacing:-0.02em; display:flex;align-items:center;gap:10px; color:var(--ink);}
+.logo .mark{ width:38px;height:38px;border-radius:11px; background:var(--grad-1); display:flex;align-items:center;justify-content:center; font-size:13px;font-weight:800;color:#fff; box-shadow:0 8px 20px rgba(108,76,241,.35); }
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{ font-family:var(--font-util);font-size:13px;font-weight:600;letter-spacing:.02em; color:var(--muted);position:relative;padding:4px 0;transition:color .3s; }
+.nav-links a::after{ content:'';position:absolute;left:0;bottom:-2px;width:0%;height:2px;background:var(--coral);transition:width .35s var(--ease); border-radius:2px;}
+.nav-links a:hover, .nav-links a.active{color:var(--ink);}
+.nav-links a:hover::after, .nav-links a.active::after{width:100%;}
+.nav-cta{ font-family:var(--font-util);font-weight:700;font-size:12.5px; padding:11px 20px;border-radius:100px; background:var(--grad-1);color:#fff; box-shadow:0 8px 22px rgba(108,76,241,.32); }
+.burger{display:none;width:38px;height:38px;border-radius:10px;border:1px solid var(--line-strong);align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+.burger span{width:16px;height:1.5px;background:var(--ink);display:block;}
+@media (max-width:900px){
+  .nav-links{position:fixed;top:0;right:0;height:100vh;width:78%;max-width:320px;background:rgba(255,255,255,.98);backdrop-filter:blur(20px);flex-direction:column;justify-content:center;align-items:flex-start;padding:40px;gap:26px;transform:translateX(100%);transition:transform .5s var(--ease);border-left:1px solid var(--line);}
+  .nav-links.open{transform:translateX(0);}
+  .nav-cta{margin-top:10px;}
+  .burger{display:flex;}
+}
+
+/* ============ HERO ============ */
+.hero-grid{ display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;position:relative;z-index:2; }
+@media (max-width:960px){ .hero-grid{grid-template-columns:1fr;text-align:center;} }
+.hero-name{ font-size:clamp(36px,6.2vw,62px); line-height:1.06; font-weight:800; margin:18px 0 20px; color:var(--ink); }
+.hero-role{ font-family:var(--font-util); font-size:clamp(14px,1.8vw,18px); font-weight:600; color:var(--primary-2); margin-bottom:22px; min-height:26px; }
+.type-cursor{animation:blink 1s step-end infinite;color:var(--coral);}
+@keyframes blink{50%{opacity:0;}}
+.hero-line{ color:var(--muted);max-width:480px;font-size:16px;margin-bottom:36px; }
+@media (max-width:960px){ .hero-line{margin-inline:auto;} }
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:44px;}
+@media (max-width:960px){ .hero-actions{justify-content:center;} }
+.btn-primary{
+  position:relative;display:inline-flex;align-items:center;gap:10px;
+  padding:15px 28px;border-radius:100px;font-weight:700;font-size:14.5px;
+  background:var(--grad-warm);color:#fff;box-shadow:0 12px 28px rgba(255,97,82,.35);
+  transition:transform .35s var(--ease), box-shadow .35s var(--ease);
+  overflow:hidden;
+}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 18px 38px rgba(255,97,82,.48);}
+.btn-primary i{transition:transform .35s var(--ease);}
+.btn-primary:hover i{transform:translateX(4px);}
+.btn-ghost{
+  display:inline-flex;align-items:center;padding:15px 28px;border-radius:100px;
+  font-weight:700;font-size:14.5px;border:1.5px solid var(--line-strong);color:var(--ink);
+  transition:all .35s var(--ease); background:#fff;
+}
+.btn-ghost:hover{border-color:var(--primary);background:rgba(108,76,241,.06);transform:translateY(-3px);}
+.hero-meta{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+@media (max-width:960px){ .hero-meta{justify-content:center;} }
+.hero-meta div:not(.dot){display:flex;flex-direction:column;font-family:var(--font-util);}
+.hero-meta strong{font-size:17px;color:var(--ink);font-weight:700;}
+.hero-meta span{font-size:11px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.05em;}
+.hero-meta .dot{width:4px;height:4px;border-radius:50%;background:var(--line-strong);}
+
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:center;height:560px;}
+.browser-card{
+  width:340px;border-radius:20px;position:relative;z-index:3;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 40px 80px -20px rgba(76,45,209,.28);
+  animation:floatCard 6s ease-in-out infinite;
+  overflow:hidden;
+}
+@keyframes floatCard{0%,100%{transform:translateY(0px);}50%{transform:translateY(-14px);}}
+.browser-bar{ display:flex;align-items:center;gap:8px; padding:14px 16px; border-bottom:1px solid var(--line); background:var(--bg-soft); }
+.browser-bar .dot-b{width:9px;height:9px;border-radius:50%;}
+.browser-bar .dot-b:nth-child(1){background:#FF6152;}
+.browser-bar .dot-b:nth-child(2){background:#FFC94A;}
+.browser-bar .dot-b:nth-child(3){background:#0FAF7E;}
+.browser-url{ margin-left:8px;flex:1;background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-family:var(--font-util);font-size:10.5px;color:var(--muted-2); }
+.browser-body{padding:22px 20px 26px;display:flex;flex-direction:column;gap:12px;}
+.skel-nav{display:flex;gap:8px;align-items:center;margin-bottom:6px;}
+.skel-dot{width:16px;height:16px;border-radius:6px;background:var(--grad-1);}
+.skel-line{height:9px;border-radius:5px;background:linear-gradient(90deg, var(--bg-soft) 0%, #EFE9FF 50%, var(--bg-soft) 100%); background-size:200% 100%; animation:shimmer 2.2s ease-in-out infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skel-title{width:70%;height:16px;}
+.skel-sub{width:88%;}
+.skel-sub2{width:60%;}
+.skel-btn{width:110px;height:30px;border-radius:100px;background:var(--grad-warm);margin-top:6px;}
+.skel-media{width:100%;height:96px;border-radius:12px;background:linear-gradient(135deg, #EDE7FF, #FFE7DE);margin-top:6px;position:relative;overflow:hidden;}
+.skel-media::after{ content:'';position:absolute;inset:0; background:linear-gradient(115deg, transparent 40%, rgba(255,255,255,.55) 50%, transparent 60%); transform:translateX(-120%); animation:sheen 5s ease-in-out infinite; }
+@keyframes sheen{ 0%,60%,100%{transform:translateX(-120%);} 80%{transform:translateX(120%);} }
+
+.price-tag{
+  position:absolute; z-index:5; right:-26px; top:36px;
+  background:var(--yellow); border:2px dashed rgba(21,15,46,.35);
+  border-radius:16px; padding:16px 20px; width:172px;
+  transform:rotate(-7deg);
+  box-shadow:0 18px 34px -10px rgba(255,201,74,.55);
+  animation:tagFloat 5s ease-in-out infinite;
+}
+@keyframes tagFloat{0%,100%{transform:rotate(-7deg) translateY(0);}50%{transform:rotate(-4deg) translateY(-8px);}}
+.price-tag::before{ content:'';position:absolute;top:-7px;left:22px;width:14px;height:14px;background:#fff;border:2px solid rgba(21,15,46,.35);border-radius:50%; }
+.price-tag .old{font-family:var(--font-util);font-size:11px;color:var(--ink);opacity:.6;text-decoration:line-through;}
+.price-tag .new{font-family:var(--font-display);font-size:20px;font-weight:800;color:var(--ink);line-height:1.1;margin:2px 0 4px;}
+.price-tag .stamp{ display:inline-block;font-family:var(--font-util);font-size:10px;font-weight:700;letter-spacing:.04em; background:var(--coral);color:#fff;padding:4px 8px;border-radius:100px;transform:rotate(-3deg); }
+
+.chat-bubble{
+  position:absolute; z-index:5; left:-30px; bottom:34px;
+  background:#fff; border:1px solid var(--line); border-radius:16px 16px 16px 4px;
+  padding:12px 14px; width:198px; box-shadow:var(--shadow-sm);
+  animation:floatCard 7s ease-in-out infinite;
+}
+.chat-bubble .who{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.chat-bubble .who i{color:#25D366;font-size:14px;}
+.chat-bubble .who span{font-family:var(--font-util);font-size:10px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.05em;}
+.chat-bubble p{font-size:12.5px;color:var(--ink);min-height:34px;}
+.chat-dots{display:flex;gap:3px;margin-top:6px;}
+.chat-dots span{width:5px;height:5px;border-radius:50%;background:var(--muted-2);opacity:.5;animation:dotPulse 1.4s ease-in-out infinite;}
+.chat-dots span:nth-child(2){animation-delay:.2s;}
+.chat-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes dotPulse{0%,60%,100%{opacity:.35;transform:translateY(0);}30%{opacity:1;transform:translateY(-2px);}}
+
+.orbit-ring{position:absolute;border-radius:50%;border:1px dashed var(--line-strong);z-index:1;}
+.orbit-ring.r1{width:460px;height:460px;animation:spin 40s linear infinite;}
+.orbit-ring.r2{width:380px;height:380px;animation:spin 30s linear infinite reverse;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.float-icon{ position:absolute;width:46px;height:46px;border-radius:14px;background:#fff;border:1px solid var(--line); display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:var(--shadow-sm); animation:iconFloat 5s ease-in-out infinite; }
+.float-icon.fi1{top:6%;left:8%;color:var(--primary);animation-delay:.2s;}
+.float-icon.fi2{bottom:10%;right:4%;color:var(--coral);animation-delay:1s;}
+.float-icon.fi3{top:44%;left:-4%;color:var(--mint);animation-delay:1.8s;}
+@keyframes iconFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+
+.scroll-cue{ position:absolute;left:50%;bottom:18px;transform:translateX(-50%); display:flex;flex-direction:column;align-items:center;gap:8px; font-family:var(--font-util);font-size:10px;color:var(--muted-2);letter-spacing:.15em;text-transform:uppercase; }
+.scroll-cue span{width:1px;height:34px;background:linear-gradient(var(--primary), transparent);animation:cueMove 1.8s ease-in-out infinite;}
+@keyframes cueMove{0%{opacity:0;transform:scaleY(0);transform-origin:top;}40%{opacity:1;transform:scaleY(1);transform-origin:top;}60%{opacity:1;transform:scaleY(1);transform-origin:bottom;}100%{opacity:0;transform:scaleY(0);transform-origin:bottom;}}
+
+/* ============ STATS BAR ============ */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;}
+@media (max-width:760px){ .stats-grid{grid-template-columns:1fr 1fr;} }
+.stat-card{padding:32px 20px;text-align:center;transition:border-color .4s, transform .4s var(--ease);}
+.stat-card:hover{border-color:var(--primary);transform:translateY(-4px);}
+.stat-num{ display:block;font-family:var(--font-display);font-size:clamp(30px,3.6vw,42px);font-weight:800; background:var(--grad-1);-webkit-background-clip:text;background-clip:text;color:transparent; }
+.stat-label{font-family:var(--font-util);font-size:11px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.06em;}
+
+/* ============ WHY US ============ */
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+@media (max-width:900px){ .why-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:560px){ .why-grid{grid-template-columns:1fr;} }
+.why-card{padding:30px 26px;position:relative;overflow:hidden;transition:transform .4s var(--ease), box-shadow .4s var(--ease);}
+.why-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);}
+.why-icon{width:52px;height:52px;border-radius:15px;background:var(--grad-1);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;margin-bottom:20px;}
+.why-card h3{font-size:17px;margin-bottom:8px;}
+.why-card p{font-size:13.5px;color:var(--muted);}
+
+/* ============ SERVICES ============ */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media (max-width:900px){ .services-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:560px){ .services-grid{grid-template-columns:1fr;} }
+.service-card{padding:28px 24px;transition:transform .4s var(--ease), border-color .4s;position:relative;}
+.service-card:hover{transform:translateY(-6px);border-color:var(--primary);}
+.service-card .num{position:absolute;top:20px;right:22px;font-family:var(--font-util);font-size:11px;color:var(--line-strong);font-weight:700;}
+.service-card i{font-size:22px;color:var(--primary);margin-bottom:16px;display:block;}
+.service-card h4{font-size:16px;margin-bottom:8px;}
+.service-card p{font-size:13px;color:var(--muted);}
+
+/* ============ PRICING ============ */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch;}
+@media (max-width:900px){ .price-grid{grid-template-columns:1fr;max-width:420px;margin:0 auto;} }
+.price-card{padding:34px 28px;display:flex;flex-direction:column;position:relative;transition:transform .4s var(--ease), box-shadow .4s var(--ease);}
+.price-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);}
+.price-card.pop{border:2px solid var(--primary);transform:scale(1.03);}
+.price-card.pop:hover{transform:scale(1.03) translateY(-6px);}
+.pop-badge{position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--grad-warm);color:#fff;font-family:var(--font-util);font-size:10.5px;font-weight:700;padding:6px 16px;border-radius:100px;letter-spacing:.04em;box-shadow:0 8px 18px rgba(255,97,82,.35);}
+.price-card .tier{font-family:var(--font-util);font-size:11px;color:var(--primary-2);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:10px;}
+.price-card h3{font-size:22px;margin-bottom:6px;}
+.price-card .desc{font-size:13px;color:var(--muted);margin-bottom:20px;}
+.price-card .amount{display:flex;align-items:baseline;gap:6px;margin-bottom:4px;}
+.price-card .amount span.pfx{font-family:var(--font-util);font-size:12px;color:var(--muted-2);}
+.price-card .amount strong{font-family:var(--font-display);font-size:34px;font-weight:800;color:var(--ink);}
+.nego-badge{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-util);font-size:11px;font-weight:700;color:var(--mint);background:rgba(15,175,126,.1);border:1px solid rgba(15,175,126,.3);padding:5px 10px;border-radius:100px;margin-bottom:22px;width:fit-content;}
+.price-list{display:flex;flex-direction:column;gap:11px;margin-bottom:26px;flex:1;}
+.price-list li{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--ink);list-style:none;}
+.price-list li i{color:var(--mint);font-size:13px;margin-top:3px;}
+.price-card .btn-primary, .price-card .btn-ghost{width:100%;justify-content:center;}
+
+/* ============ PRICE COMPARISON TABLE ============ */
+.price-table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-sm);}
+.price-table{width:100%;border-collapse:collapse;min-width:640px;font-size:13.5px;}
+.price-table th, .price-table td{padding:16px 18px;text-align:left;border-bottom:1px solid var(--line);}
+.price-table thead th{ font-family:var(--font-util);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted-2); background:var(--bg-soft); }
+.price-table thead th.col-highlight{color:var(--primary-2);}
+.price-table td:first-child, .price-table th:first-child{font-weight:600;color:var(--ink);}
+.price-table tbody tr:last-child td{border-bottom:none;}
+.price-table tbody tr:hover{background:var(--bg-soft);}
+.price-table td.col-highlight{background:rgba(108,76,241,.05);}
+.price-table i.fa-circle-check{color:var(--mint);}
+.price-table i.fa-circle-xmark{color:var(--line-strong);}
+.price-table .row-price td{font-family:var(--font-display);font-weight:800;font-size:16px;color:var(--ink);}
+.nego-note{ display:flex;align-items:center;gap:12px;margin-top:22px;padding:16px 20px;border-radius:14px; background:rgba(255,201,74,.14);border:1px dashed rgba(255,201,74,.6); font-size:13.5px;color:var(--ink); }
+.nego-note i{color:var(--coral);font-size:18px;flex-shrink:0;}
+
+/* ============ BENEFITS ============ */
+.benefit-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+@media (max-width:960px){ .benefit-grid{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:560px){ .benefit-grid{grid-template-columns:1fr;} }
+.benefit-item{ display:flex;align-items:flex-start;gap:14px;padding:22px; }
+.benefit-item i{ width:42px;height:42px;border-radius:12px;flex-shrink:0; background:rgba(108,76,241,.1);color:var(--primary); display:flex;align-items:center;justify-content:center;font-size:17px; }
+.benefit-item h4{font-size:14.5px;margin-bottom:5px;}
+.benefit-item p{font-size:12.5px;color:var(--muted);}
+.benefit-item.highlight i{background:var(--grad-warm);color:#fff;}
+
+/* ============ PROCESS TIMELINE ============ */
+.timeline{position:relative;}
+.timeline-line{position:absolute;left:29px;top:10px;bottom:10px;width:2px;background:linear-gradient(var(--line-strong), var(--line-strong));background-image:repeating-linear-gradient(to bottom, var(--primary) 0 8px, transparent 8px 16px);}
+.timeline-item{display:flex;gap:26px;margin-bottom:44px;position:relative;}
+.timeline-item:last-child{margin-bottom:0;}
+.timeline-dot{ flex-shrink:0;width:60px;height:60px;border-radius:16px; background:var(--grad-1);display:flex;align-items:center;justify-content:center; font-family:var(--font-display);font-weight:800;color:#fff;font-size:18px; box-shadow:0 12px 26px rgba(108,76,241,.32); position:relative;z-index:2; }
+.timeline-card{flex:1;padding:24px 26px;}
+.timeline-card h3{font-size:17px;margin-bottom:6px;}
+.timeline-card p{font-size:13.5px;color:var(--muted);}
+
+/* ============ GUARANTEE ============ */
+.guarantee-grid{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;}
+.guarantee-badge{ position:relative;width:210px;padding:30px 22px;text-align:center;overflow:hidden; transition:transform .4s var(--ease); }
+.guarantee-badge:hover{transform:translateY(-6px) rotate(-1deg);}
+.g-glow{position:absolute;top:-30%;left:50%;translate:-50% 0;width:140%;height:140%;background:radial-gradient(circle, rgba(255,201,74,.28), transparent 65%);}
+.guarantee-badge i{font-size:28px;color:var(--coral);margin-bottom:14px;display:block;position:relative;}
+.guarantee-badge h4{font-size:14.5px;margin-bottom:6px;position:relative;}
+.guarantee-badge span{font-size:12px;color:var(--muted-2);font-family:var(--font-body);position:relative;}
+
+/* ============ FAQ ============ */
+.faq-list{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+.faq-item{padding:0;overflow:hidden;}
+.faq-q{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 26px;cursor:pointer;}
+.faq-q h4{font-size:15.5px;font-weight:700;}
+.faq-q i{color:var(--primary);transition:transform .4s var(--ease);flex-shrink:0;}
+.faq-item.open .faq-q i{transform:rotate(135deg);color:var(--coral);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .45s var(--ease);}
+.faq-a p{padding:0 26px 22px;font-size:13.5px;color:var(--muted);}
+
+/* ============ CONTACT ============ */
+.wa-cta-box{
+  max-width:640px;margin:0 auto;padding:38px 40px;
+  display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;
+}
+.wa-cta-icon{ width:64px;height:64px;border-radius:18px;background:#25D366;color:#fff;font-size:28px; display:flex;align-items:center;justify-content:center; box-shadow:0 14px 30px rgba(37,211,102,.35); }
+.wa-cta-text{display:flex;flex-direction:column;gap:4px;}
+.wa-cta-text span{font-family:var(--font-util);font-size:11.5px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.06em;}
+.wa-cta-text strong{font-family:var(--font-display);font-size:24px;color:var(--ink);font-weight:800;}
+.contact-cards-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;max-width:640px;margin:24px auto 0;}
+.contact-card{ display:flex;align-items:center;gap:14px;padding:16px 20px;transition:all .35s var(--ease); flex:1;min-width:230px; }
+a.contact-card:hover{transform:translateY(-4px);border-color:var(--primary);}
+.contact-card i{font-size:18px;width:40px;height:40px;border-radius:12px;background:rgba(108,76,241,.1);color:var(--primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.contact-card span{display:block;font-size:10.5px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.06em;font-family:var(--font-util);}
+.contact-card strong{font-size:13.5px;color:var(--ink);font-weight:700;}
+
+footer{padding:36px 0;border-top:1px solid var(--line);position:relative;z-index:2;}
+.footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+.footer-inner span{font-size:12.5px;color:var(--muted-2);font-family:var(--font-util);}
+.footer-links{display:flex;gap:22px;}
+.footer-links a{font-size:12.5px;color:var(--muted);font-family:var(--font-util);transition:color .3s;}
+.footer-links a:hover{color:var(--coral);}
+
+.fab-wa{
+  position:fixed;bottom:28px;left:28px;z-index:850;width:56px;height:56px;border-radius:50%;
+  background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;
+  box-shadow:0 12px 30px rgba(37,211,102,.4);animation:fabPulse 2.4s ease-in-out infinite;
+}
+@keyframes fabPulse{0%,100%{box-shadow:0 12px 30px rgba(37,211,102,.4);}50%{box-shadow:0 12px 40px rgba(37,211,102,.65);}}
+.fab-top{
+  position:fixed;bottom:28px;right:28px;z-index:850;width:50px;height:50px;border-radius:50%;
+  background:var(--grad-1);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;
+  box-shadow:0 12px 26px rgba(108,76,241,.35);opacity:0;visibility:hidden;transform:translateY(10px);
+  transition:all .4s var(--ease);
+}
+.fab-top.show{opacity:1;visibility:visible;transform:translateY(0);}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-mark">MBS</div>
+  <div class="loader-bar"><span></span></div>
+  <div class="loader-label">Menyiapkan Studio</div>
+</div>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="scroll-progress"></div>
+
+<div class="aurora"></div>
+<canvas id="particles"></canvas>
+<div class="grid-overlay"></div>
+
+<nav id="navbar">
+  <div class="wrap nav-inner">
+    <a href="#home" class="logo"><span class="mark">MB</span> MBS<span style="color:var(--coral)">Studio</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#layanan" class="nlink">Layanan</a></li>
+      <li><a href="#harga" class="nlink">Harga</a></li>
+      <li><a href="#benefit" class="nlink">Benefit</a></li>
+      <li><a href="#faq" class="nlink">FAQ</a></li>
+      <li><a href="#kontak" class="nav-cta">Konsultasi Gratis</a></li>
+    </ul>
+    <button class="burger" id="burger" aria-label="menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<section id="home" style="min-height:100vh;display:flex;align-items:center;padding-top:110px;">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow reveal">Jasa Pembuatan Website Profesional</div>
+      <h1 class="hero-name reveal">Website Impian Anda,<br>Harga Bisa <span style="background:var(--grad-warm);-webkit-background-clip:text;background-clip:text;color:transparent;">Dibicarakan.</span></h1>
+      <div class="hero-role reveal"><span id="typed"></span><span class="type-cursor">|</span></div>
+      <p class="hero-line reveal">Butuh website yang tampil profesional tanpa bikin kantong bolong? Anda di tempat yang tepat. Setiap proyek saya kerjakan dengan detail, cepat, dan harga yang selalu bisa didiskusikan sampai Anda benar-benar sreg.</p>
+      <div class="hero-actions reveal">
+        <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20tertarik%20dengan%20jasa%20pembuatan%20website.%20Boleh%20info%20%26%20nego%20harganya%3F" target="_blank" class="btn-primary magnetic"><span>Chat &amp; Nego Harga</span> <i class="fa-brands fa-whatsapp"></i></a>
+        <a href="#harga" class="btn-ghost magnetic"><span>Lihat Paket Layanan</span></a>
+      </div>
+      <div class="hero-meta reveal">
+        <div><strong>100%</strong><span>Harga Bisa Nego</span></div>
+        <div class="dot"></div>
+        <div><strong>Gratis</strong><span>Konsultasi Awal</span></div>
+        <div class="dot"></div>
+        <div><strong>Tangerang</strong><span>Banten, Indonesia</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual reveal">
+      <div class="browser-card" id="idCard">
+        <div class="browser-bar">
+          <span class="dot-b"></span><span class="dot-b"></span><span class="dot-b"></span>
+          <div class="browser-url"><i class="fa-solid fa-lock" style="font-size:9px;margin-right:5px;"></i>websitekamu.com</div>
+        </div>
+        <div class="browser-body">
+          <div class="skel-nav"><div class="skel-dot"></div><div class="skel-line" style="width:70px;height:8px;"></div></div>
+          <div class="skel-line skel-title"></div>
+          <div class="skel-line skel-sub"></div>
+          <div class="skel-line skel-sub2"></div>
+          <div class="skel-btn"></div>
+          <div class="skel-media"></div>
+        </div>
+      </div>
+      <div class="price-tag">
+        <div class="old">Harga Kaku</div>
+        <div class="new">Bisa Nego!</div>
+        <span class="stamp">Chat Kami 🤝</span>
+      </div>
+      <div class="chat-bubble">
+        <div class="who"><i class="fa-brands fa-whatsapp"></i><span>Chat Klien</span></div>
+        <p id="chatText"></p>
+        <div class="chat-dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="orbit-ring r1"></div>
+      <div class="orbit-ring r2"></div>
+      <span class="float-icon fi1"><i class="fa-solid fa-code"></i></span>
+      <span class="float-icon fi2"><i class="fa-solid fa-palette"></i></span>
+      <span class="float-icon fi3"><i class="fa-solid fa-rocket"></i></span>
+    </div>
+  </div>
+  <a href="#tentang" class="scroll-cue"><span></span> Scroll</a>
+</section>
+
+<!-- ============ STATS ============ -->
+<section id="tentang" style="padding-top:0;padding-bottom:60px;">
+  <div class="wrap">
+    <div class="stats-grid reveal-stagger">
+      <div class="stat-card glass"><span class="stat-num" style="background:var(--grad-1);-webkit-background-clip:text;background-clip:text;color:transparent;">Custom</span><span class="stat-label">Desain Sesuai Kebutuhan</span></div>
+      <div class="stat-card glass"><span class="stat-num" data-count="1" data-suffix=" mnt">0</span><span class="stat-label">Rata-rata Respon Chat</span></div>
+      <div class="stat-card glass"><span class="stat-num" style="background:var(--grad-1);-webkit-background-clip:text;background-clip:text;color:transparent;">Gratis</span><span class="stat-label">Biaya Konsultasi</span></div>
+      <div class="stat-card glass"><span class="stat-num" data-count="100" data-suffix="%">0</span><span class="stat-label">Harga Bisa Dinego</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY US ============ -->
+<section id="mengapa" class="section-alt">
+  <div class="wrap">
+    <div class="eyebrow reveal">Alasan Memilih Kami</div>
+    <h2 class="section-title reveal">Kenapa Klien Pilih <em>MBS Studio</em>?</h2>
+    <p class="section-sub reveal">Kombinasi harga bersahabat, kualitas terjaga, dan komunikasi yang enak diajak diskusi.</p>
+
+    <div class="why-grid reveal-stagger">
+      <div class="why-card glass"><div class="why-icon"><i class="fa-solid fa-handshake"></i></div><h3>Harga Fleksibel &amp; Bisa Nego</h3><p>Bujet terbatas bukan masalah — sampaikan kebutuhan Anda, kita cari titik harga yang pas untuk kedua pihak.</p></div>
+      <div class="why-card glass"><div class="why-icon"><i class="fa-solid fa-swatchbook"></i></div><h3>Desain Modern &amp; Responsif</h3><p>Tampilan rapi, cepat diakses, dan enak dilihat di HP maupun laptop, disesuaikan dengan identitas bisnis Anda.</p></div>
+      <div class="why-card glass"><div class="why-icon"><i class="fa-solid fa-bolt"></i></div><h3>Pengerjaan Cepat</h3><p>Proses jelas dan terjadwal, sehingga website Anda bisa online tanpa menunggu lama.</p></div>
+      <div class="why-card glass"><div class="why-icon"><i class="fa-solid fa-arrows-rotate"></i></div><h3>Revisi Sesuai Paket</h3><p>Ada ruang revisi di setiap paket agar hasil akhir benar-benar sesuai dengan yang Anda bayangkan.</p></div>
+      <div class="why-card glass"><div class="why-icon"><i class="fa-solid fa-headset"></i></div><h3>Support Setelah Rilis</h3><p>Tetap bisa dihubungi untuk konsultasi ringan setelah website Anda tayang.</p></div>
+      <div class="why-card glass"><div class="why-icon"><i class="fa-solid fa-comments"></i></div><h3>Konsultasi Tanpa Biaya</h3><p>Diskusi kebutuhan dan estimasi harga di awal sepenuhnya gratis, tanpa komitmen.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SERVICES ============ -->
+<section id="layanan">
+  <div class="wrap">
+    <div class="eyebrow reveal">Layanan Kami</div>
+    <h2 class="section-title reveal">Apapun Kebutuhan Anda, <em>Kami Siap Wujudkan</em></h2>
+    <p class="section-sub reveal">Dari landing page sederhana sampai sistem custom yang kompleks — sampaikan kebutuhan Anda, kami rancang solusinya.</p>
+    <div class="services-grid reveal-stagger" id="servicesGrid"></div>
+  </div>
+</section>
+
+<!-- ============ PRICING ============ -->
+<section id="harga" class="section-alt">
+  <div class="wrap">
+    <div class="eyebrow reveal">Paket Layanan</div>
+    <h2 class="section-title reveal">Harga <em>Bersahabat</em>, Selalu Terbuka Nego</h2>
+    <p class="section-sub reveal">Kami percaya setiap klien punya kebutuhan dan bujet yang berbeda. Konsultasikan langsung, dan dapatkan penawaran terbaik yang kami sesuaikan khusus untuk Anda — tanpa paksaan, tanpa biaya tersembunyi.</p>
+
+    <div class="price-grid reveal-stagger">
+      <div class="price-card glass">
+        <div class="tier">Starter</div>
+        <h3>Landing Page</h3>
+        <p class="desc">Cocok untuk promosi produk, campaign, atau penawaran singkat yang butuh tampil cepat.</p>
+        <div class="amount"><span class="pfx">Investasi</span><strong>Nego</strong></div>
+        <span class="nego-badge"><i class="fa-solid fa-handshake"></i> Konsultasi &amp; penawaran gratis</span>
+        <ul class="price-list">
+          <li><i class="fa-solid fa-circle-check"></i> 1 halaman penuh, siap pakai</li>
+          <li><i class="fa-solid fa-circle-check"></i> Desain modern &amp; responsif</li>
+          <li><i class="fa-solid fa-circle-check"></i> Formulir kontak / WhatsApp</li>
+          <li><i class="fa-solid fa-circle-check"></i> Revisi sesuai kesepakatan</li>
+        </ul>
+        <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20Landing%20Page." target="_blank" class="btn-ghost">Konsultasi &amp; Nego</a>
+      </div>
+
+      <div class="price-card glass pop">
+        <span class="pop-badge">Paling Diminati</span>
+        <div class="tier">Bisnis</div>
+        <h3>Company Profile / Sekolah</h3>
+        <p class="desc">Untuk bisnis atau lembaga yang ingin tampil profesional dan lebih dipercaya secara online.</p>
+        <div class="amount"><span class="pfx">Investasi</span><strong>Nego</strong></div>
+        <span class="nego-badge"><i class="fa-solid fa-handshake"></i> Konsultasi &amp; penawaran gratis</span>
+        <ul class="price-list">
+          <li><i class="fa-solid fa-circle-check"></i> Beberapa halaman sesuai kebutuhan</li>
+          <li><i class="fa-solid fa-circle-check"></i> Desain custom sesuai identitas Anda</li>
+          <li><i class="fa-solid fa-circle-check"></i> Optimasi SEO dasar</li>
+          <li><i class="fa-solid fa-circle-check"></i> Revisi sesuai kesepakatan</li>
+          <li><i class="fa-solid fa-circle-check"></i> Pendampingan pasca rilis</li>
+        </ul>
+        <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20Company%20Profile%20%2F%20Sekolah." target="_blank" class="btn-primary">Konsultasi &amp; Nego</a>
+      </div>
+
+      <div class="price-card glass">
+        <div class="tier">Custom</div>
+        <h3>UMKM / Portofolio / Custom</h3>
+        <p class="desc">Solusi fleksibel untuk UMKM, personal branding, atau kebutuhan website khusus lainnya.</p>
+        <div class="amount"><span class="pfx">Investasi</span><strong>Nego</strong></div>
+        <span class="nego-badge"><i class="fa-solid fa-handshake"></i> Konsultasi &amp; penawaran gratis</span>
+        <ul class="price-list">
+          <li><i class="fa-solid fa-circle-check"></i> Struktur &amp; fitur disesuaikan kebutuhan</li>
+          <li><i class="fa-solid fa-circle-check"></i> Desain profesional &amp; mobile friendly</li>
+          <li><i class="fa-solid fa-circle-check"></i> Integrasi WhatsApp / kontak</li>
+          <li><i class="fa-solid fa-circle-check"></i> Revisi sesuai kesepakatan</li>
+        </ul>
+        <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20UMKM%20%2F%20Portofolio%20%2F%20Custom." target="_blank" class="btn-ghost">Konsultasi &amp; Nego</a>
+      </div>
+    </div>
+    <div class="reveal" style="margin-top:56px;">
+      <h3 style="font-size:20px;margin-bottom:18px;">Tabel Perbandingan Fitur</h3>
+      <div class="price-table-wrap">
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Fitur</th>
+              <th>Landing Page</th>
+              <th class="col-highlight">Company Profile / Sekolah</th>
+              <th>UMKM / Portofolio / Custom</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-price">
+              <td>Investasi</td>
+              <td>Bisa Nego</td>
+              <td class="col-highlight">Bisa Nego</td>
+              <td>Bisa Nego</td>
+            </tr>
+            <tr><td>Jumlah Halaman</td><td>1 halaman</td><td class="col-highlight">Menyesuaikan kebutuhan</td><td>Menyesuaikan kebutuhan</td></tr>
+            <tr><td>Desain Custom</td><td><i class="fa-solid fa-circle-check"></i></td><td class="col-highlight"><i class="fa-solid fa-circle-check"></i></td><td><i class="fa-solid fa-circle-check"></i></td></tr>
+            <tr><td>Desain Responsif (HP &amp; Laptop)</td><td><i class="fa-solid fa-circle-check"></i></td><td class="col-highlight"><i class="fa-solid fa-circle-check"></i></td><td><i class="fa-solid fa-circle-check"></i></td></tr>
+            <tr><td>Formulir / Integrasi WhatsApp</td><td><i class="fa-solid fa-circle-check"></i></td><td class="col-highlight"><i class="fa-solid fa-circle-check"></i></td><td><i class="fa-solid fa-circle-check"></i></td></tr>
+            <tr><td>Optimasi SEO Dasar</td><td><i class="fa-solid fa-circle-xmark"></i></td><td class="col-highlight"><i class="fa-solid fa-circle-check"></i></td><td><i class="fa-solid fa-circle-check"></i></td></tr>
+            <tr><td>Konsultasi Sebelum Order</td><td>Gratis</td><td class="col-highlight">Gratis</td><td>Gratis</td></tr>
+            <tr><td>Revisi</td><td>Sesuai kesepakatan</td><td class="col-highlight">Sesuai kesepakatan</td><td>Sesuai kesepakatan</td></tr>
+            <tr><td>Pendampingan Pasca Rilis</td><td><i class="fa-solid fa-circle-check"></i></td><td class="col-highlight"><i class="fa-solid fa-circle-check"></i></td><td><i class="fa-solid fa-circle-check"></i></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="nego-note"><i class="fa-solid fa-handshake"></i> Harga belum kami cantumkan di sini karena setiap kebutuhan berbeda-beda. Chat kami untuk konsultasi gratis, ceritakan kebutuhan Anda, dan kami siap memberikan penawaran terbaik yang bisa dinegosiasikan.</div>
+    </div>
+
+    <p class="reveal" style="text-align:center;margin-top:34px;color:var(--muted);font-size:13.5px;">Butuh sesuatu yang beda dari paket di atas? <a href="#kontak" style="color:var(--primary-2);font-weight:700;text-decoration:underline;">Ceritakan kebutuhan Anda</a>, kami siap menyesuaikan fitur dan harga.</p>
+  </div>
+</section>
+
+<!-- ============ BENEFITS ============ -->
+<section id="benefit">
+  <div class="wrap">
+    <div class="eyebrow reveal">Yang Anda Dapatkan</div>
+    <h2 class="section-title reveal">Banyak <em>Benefit</em>, Bukan Cuma Website</h2>
+    <p class="section-sub reveal">Setiap kerja sama sudah termasuk hal-hal berikut, tanpa biaya tambahan.</p>
+    <div class="benefit-grid reveal-stagger">
+      <div class="benefit-item glass highlight"><i class="fa-solid fa-comments"></i><div><h4>Konsultasi Gratis</h4><p>Diskusi kebutuhan &amp; estimasi harga sebelum order, tanpa dipungut biaya sama sekali.</p></div></div>
+      <div class="benefit-item glass"><i class="fa-solid fa-handshake"></i><div><h4>Harga Bisa Nego</h4><p>Semua paket terbuka untuk dinegosiasikan sesuai bujet Anda.</p></div></div>
+      <div class="benefit-item glass"><i class="fa-solid fa-arrows-rotate"></i><div><h4>Revisi Sesuai Paket</h4><p>Ruang revisi di setiap paket agar hasil akhir sesuai ekspektasi.</p></div></div>
+      <div class="benefit-item glass"><i class="fa-solid fa-mobile-screen-button"></i><div><h4>Desain Responsif</h4><p>Website tetap rapi diakses dari HP, tablet, maupun laptop.</p></div></div>
+      <div class="benefit-item glass"><i class="fa-solid fa-magnifying-glass-chart"></i><div><h4>SEO Dasar</h4><p>Struktur halaman disiapkan agar lebih mudah ditemukan di mesin pencari.</p></div></div>
+      <div class="benefit-item glass"><i class="fa-solid fa-headset"></i><div><h4>Support Pasca Rilis</h4><p>Tetap bisa dihubungi untuk konsultasi ringan setelah website tayang.</p></div></div>
+      <div class="benefit-item glass"><i class="fa-solid fa-file-invoice-dollar"></i><div><h4>Harga Transparan</h4><p>Rincian biaya jelas di awal, tanpa biaya tersembunyi di akhir.</p></div></div>
+      <div class="benefit-item glass"><i class="fa-solid fa-bolt"></i><div><h4>Respon Cepat</h4><p>Pertanyaan dan progress proyek dibalas cepat lewat WhatsApp.</p></div></div>
+    </div>
+  </div>
+</section>
+
+</section>
+
+<!-- ============ PROCESS ============ -->
+<section id="proses">
+  <div class="wrap">
+    <div class="eyebrow reveal">Alur Kerja</div>
+    <h2 class="section-title reveal">Proses <em>Jelas</em>, Tanpa Drama</h2>
+    <p class="section-sub reveal">Anda tahu persis sedang di tahap mana, dari obrolan pertama sampai website Anda resmi online.</p>
+
+    <div class="timeline reveal-stagger">
+      <div class="timeline-line"></div>
+      <div class="timeline-item">
+        <div class="timeline-dot">01</div>
+        <div class="timeline-card glass"><h3>Konsultasi &amp; Nego Harga</h3><p>Ceritakan kebutuhan website Anda lewat WhatsApp, lalu kita diskusikan fitur dan harga yang pas.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">02</div>
+        <div class="timeline-card glass"><h3>Desain Tampilan</h3><p>Saya buatkan gambaran desain sesuai identitas dan gaya bisnis Anda untuk disetujui bersama.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">03</div>
+        <div class="timeline-card glass"><h3>Pengembangan Website</h3><p>Desain yang disetujui dibangun menjadi website yang berfungsi penuh dan siap diuji coba.</p></div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot">04</div>
+        <div class="timeline-card glass"><h3>Revisi &amp; Peluncuran</h3><p>Masukan Anda diterapkan lewat sesi revisi, lalu website resmi tayang dan siap digunakan.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GUARANTEE ============ -->
+<section id="jaminan">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="justify-content:center;">Jaminan Kami</div>
+    <h2 class="section-title reveal" style="text-align:center;">Belanja <em>Tenang</em>, Tanpa Was-was</h2>
+    <p class="section-sub reveal" style="margin-left:auto;margin-right:auto;text-align:center;">Setiap paket sudah termasuk jaminan berikut, tanpa biaya tersembunyi.</p>
+    <div class="guarantee-grid reveal-stagger">
+      <div class="guarantee-badge glass"><div class="g-glow"></div><i class="fa-solid fa-file-invoice-dollar"></i><h4>Harga Transparan</h4><span>Tanpa biaya tersembunyi di akhir</span></div>
+      <div class="guarantee-badge glass"><div class="g-glow"></div><i class="fa-solid fa-rotate-left"></i><h4>Garansi Revisi</h4><span>Sesuai jumlah di masing-masing paket</span></div>
+      <div class="guarantee-badge glass"><div class="g-glow"></div><i class="fa-solid fa-headset"></i><h4>Respon Cepat</h4><span>Fast response via WhatsApp</span></div>
+      <div class="guarantee-badge glass"><div class="g-glow"></div><i class="fa-solid fa-shield-heart"></i><h4>Support Purnajual</h4><span>Konsultasi tetap terbuka usai rilis</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="section-alt">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="justify-content:center;">Pertanyaan Umum</div>
+    <h2 class="section-title reveal" style="text-align:center;">Masih Ada yang <em>Ingin Ditanyakan?</em></h2>
+    <p class="section-sub reveal" style="margin-left:auto;margin-right:auto;text-align:center;">Beberapa pertanyaan yang paling sering ditanyakan calon klien.</p>
+    <div class="faq-list reveal-stagger" id="faqList"></div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="kontak">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="justify-content:center;">Hubungi Kami</div>
+    <h2 class="section-title reveal" style="text-align:center;">Satu Chat Menuju <em>Website Impian Anda</em></h2>
+    <p class="section-sub reveal" style="margin-left:auto;margin-right:auto;text-align:center;">Tidak ada obligasi, tidak ada tekanan. Ceritakan saja kebutuhan Anda lewat WhatsApp, sisanya biar kami yang bantu carikan solusinya.</p>
+
+    <div class="wa-cta-box glass reveal">
+      <div class="wa-cta-icon"><i class="fa-brands fa-whatsapp"></i></div>
+      <div class="wa-cta-text">
+        <span>Chat Langsung, Respon Cepat</span>
+        <strong>0895-3215-78148</strong>
+      </div>
+      <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20tertarik%20dengan%20jasa%20pembuatan%20website.%20Boleh%20info%20%26%20nego%20harganya%3F" target="_blank" class="btn-primary magnetic"><span>Chat via WhatsApp</span> <i class="fa-brands fa-whatsapp"></i></a>
+    </div>
+
+    <div class="contact-cards-row reveal-stagger">
+      </a>
+      <div class="contact-card glass">
+        <i class="fa-solid fa-location-dot"></i>
+        <div><span>Lokasi</span><strong>Kabupaten Tangerang, Banten</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <span>© 2026 MBS Studio — Maulana Bayu Satria. Seluruh hak cipta dilindungi.</span>
+    <div class="footer-links">
+      <a href="#home">Beranda</a><a href="#layanan">Layanan</a><a href="#harga">Harga</a><a href="#kontak">Kontak</a>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20harga%20jasa%20website." target="_blank" class="fab-wa" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+<button class="fab-top" id="backTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6C4CF1"/>
+      <stop offset="55%" stop-color="#9B6BFF"/>
+      <stop offset="100%" stop-color="#FF6152"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<script>
+document.documentElement.style.scrollBehavior = 'smooth';
+
+/* ---------- LOADER ---------- */
+window.addEventListener('load', ()=>{
+  setTimeout(()=>{
+    document.getElementById('loader').classList.add('hide');
+    document.body.style.cursor = window.innerWidth>900 ? 'none' : 'auto';
+    revealCheck();
+  }, 1400);
+});
+
+/* ---------- CUSTOM CURSOR ---------- */
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx=0,my=0, rx=0, ry=0;
+window.addEventListener('mousemove', e=>{
+  mx=e.clientX; my=e.clientY;
+  dot.style.left=mx+'px'; dot.style.top=my+'px';
+});
+(function loopRing(){
+  rx += (mx-rx)*0.16; ry += (my-ry)*0.16;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(loopRing);
+})();
+document.querySelectorAll('a, button, .contact-card, .price-card, .faq-q').forEach(el=>{
+  el.addEventListener('mouseenter', ()=>ring.classList.add('big'));
+  el.addEventListener('mouseleave', ()=>ring.classList.remove('big'));
+});
+
+/* ---------- MAGNETIC BUTTONS ---------- */
+document.querySelectorAll('.magnetic').forEach(btn=>{
+  btn.addEventListener('mousemove', e=>{
+    const r = btn.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    btn.style.transform = `translate(${x*0.18}px, ${y*0.4}px)`;
+  });
+  btn.addEventListener('mouseleave', ()=>{ btn.style.transform='translate(0,0)'; });
+});
+
+/* ---------- PARTICLES CANVAS ---------- */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W,H, particles=[];
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+const COUNT = window.innerWidth<700 ? 30 : 65;
+for(let i=0;i<COUNT;i++){
+  particles.push({ x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-0.5)*0.22, vy:(Math.random()-0.5)*0.22, r:Math.random()*1.6+0.5 });
+}
+function drawParticles(){
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='rgba(108,76,241,0.38)';
+  for(const p of particles){
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+  }
+  for(let i=0;i<particles.length;i++){
+    for(let j=i+1;j<particles.length;j++){
+      const a=particles[i], b=particles[j];
+      const d = Math.hypot(a.x-b.x, a.y-b.y);
+      if(d<120){
+        ctx.strokeStyle = `rgba(255,97,82,${0.10*(1-d/120)})`;
+        ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+/* ---------- SCROLL PROGRESS + NAVBAR ---------- */
+const navbar = document.getElementById('navbar');
+const progress = document.getElementById('scroll-progress');
+const backTop = document.getElementById('backTop');
+let lastY = window.scrollY;
+window.addEventListener('scroll', ()=>{
+  const y = window.scrollY;
+  const h = document.documentElement.scrollHeight - window.innerHeight;
+  progress.style.width = (y/h*100)+'%';
+
+  if(y>60){ navbar.classList.add('scrolled'); } else { navbar.classList.remove('scrolled'); }
+  if(y>lastY && y>200){ navbar.classList.add('hide-nav'); } else { navbar.classList.remove('hide-nav'); }
+  lastY = y;
+
+  if(y>600){ backTop.classList.add('show'); } else { backTop.classList.remove('show'); }
+
+  const sections = document.querySelectorAll('section[id]');
+  let current = '';
+  sections.forEach(sec=>{ if(y >= sec.offsetTop - 160) current = sec.id; });
+  document.querySelectorAll('.nlink').forEach(l=>{
+    l.classList.toggle('active', l.getAttribute('href')==='#'+current);
+  });
+});
+backTop.addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+
+/* ---------- MOBILE NAV ---------- */
+const burger = document.getElementById('burger');
+const navLinks = document.getElementById('navLinks');
+burger.addEventListener('click', ()=> navLinks.classList.toggle('open'));
+document.querySelectorAll('#navLinks a').forEach(a=> a.addEventListener('click', ()=> navLinks.classList.remove('open')));
+
+/* ---------- TYPING ANIMATION (hero role) ---------- */
+const roles = ['Jasa Pembuatan Website','Landing Page & Company Profile','Toko Online / E-commerce','Harga Ramah, Bisa Nego'];
+const typedEl = document.getElementById('typed');
+let ri=0, ci=0, deleting=false;
+function typeLoop(){
+  const word = roles[ri];
+  if(!deleting){
+    ci++; typedEl.textContent = word.slice(0,ci);
+    if(ci===word.length){ deleting=true; setTimeout(typeLoop, 1400); return; }
+  } else {
+    ci--; typedEl.textContent = word.slice(0,ci);
+    if(ci===0){ deleting=false; ri=(ri+1)%roles.length; }
+  }
+  setTimeout(typeLoop, deleting?36:70);
+}
+typeLoop();
+
+/* ---------- CHAT BUBBLE TYPING (hero visual) ---------- */
+const chatLines = ['Bisa kurang ga kak? 🙏','Bisa kita bahas kok 😊','Chat aja, langsung nego!'];
+const chatEl = document.getElementById('chatText');
+let chi=0, cci=0, cdeleting=false;
+function chatLoop(){
+  const word = chatLines[chi];
+  if(!cdeleting){
+    cci++; chatEl.textContent = word.slice(0,cci);
+    if(cci===word.length){ cdeleting=true; setTimeout(chatLoop, 1600); return; }
+  } else {
+    cci--; chatEl.textContent = word.slice(0,cci);
+    if(cci===0){ cdeleting=false; chi=(chi+1)%chatLines.length; }
+  }
+  setTimeout(chatLoop, cdeleting?24:55);
+}
+setTimeout(chatLoop, 1800);
+
+/* ---------- ID CARD TILT ---------- */
+const idCard = document.getElementById('idCard');
+idCard.addEventListener('mousemove', e=>{
+  const r = idCard.getBoundingClientRect();
+  const px = (e.clientX - r.left)/r.width - 0.5;
+  const py = (e.clientY - r.top)/r.height - 0.5;
+  idCard.style.transform = `rotateY(${px*10}deg) rotateX(${-py*10}deg) translateZ(10px)`;
+});
+idCard.addEventListener('mouseleave', ()=>{ idCard.style.transform='rotateY(0) rotateX(0)'; });
+
+/* ---------- REVEAL ON SCROLL ---------- */
+const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add('in'); } });
+}, {threshold:0.15});
+revealEls.forEach(el=>io.observe(el));
+function revealCheck(){ revealEls.forEach(el=>{ const r = el.getBoundingClientRect(); if(r.top < window.innerHeight*0.9) el.classList.add('in'); }); }
+
+/* ---------- SERVICES DATA ---------- */
+const services = [
+  {icon:'fa-building', title:'Website Company Profile', desc:'Menghadirkan identitas perusahaan yang meyakinkan di mata calon klien dan mitra bisnis.'},
+  {icon:'fa-school', title:'Website Sekolah', desc:'Profil lembaga pendidikan lengkap dengan informasi akademik dan jalur pendaftaran.'},
+  {icon:'fa-rocket', title:'Landing Page', desc:'Satu halaman fokus untuk promosi produk, campaign, atau penawaran khusus Anda.'},
+  {icon:'fa-shop', title:'Website UMKM', desc:'Etalase digital agar usaha Anda makin mudah ditemukan dan dipercaya calon pelanggan.'},
+  {icon:'fa-id-card', title:'Website Portofolio', desc:'Etalase karya profesional untuk personal branding freelancer maupun individu.'},
+  {icon:'fa-code', title:'Website Custom Sederhana', desc:'Solusi website sesuai kebutuhan spesifik Anda, dari konsep sampai siap pakai.'},
+];
+const servicesGrid = document.getElementById('servicesGrid');
+services.forEach((s,i)=>{
+  const card = document.createElement('div');
+  card.className='service-card glass';
+  card.innerHTML = `<span class="num">0${i+1}</span><i class="fa-solid ${s.icon}"></i><h4>${s.title}</h4><p>${s.desc}</p>`;
+  servicesGrid.appendChild(card);
+});
+
+/* ---------- FAQ DATA + ACCORDION ---------- */
+const faqs = [
+  {q:'Apakah harga di website ini benar-benar bisa dinego?', a:'Sangat bisa. Kami sengaja tidak memasang angka pasti karena setiap kebutuhan berbeda. Ceritakan kebutuhan dan bujet Anda lewat WhatsApp, dan kami akan carikan penawaran yang paling masuk akal untuk Anda.'},
+  {q:'Berapa lama waktu pengerjaan website?', a:'Tergantung kompleksitas dan kecepatan respon Anda saat proses revisi. Estimasi waktu akan disepakati bersama sejak awal konsultasi, jadi Anda tahu pasti kapan website Anda siap tayang.'},
+  {q:'Apakah saya perlu menyiapkan domain dan hosting sendiri?', a:'Tidak wajib. Anda bisa menyiapkan sendiri atau meminta bantuan pengadaan domain & hosting, biayanya dibahas terpisah dari biaya jasa pembuatan.'},
+  {q:'Bagaimana sistem pembayarannya?', a:'Umumnya menggunakan sistem DP di awal dan pelunasan setelah website selesai dan disetujui, dengan rincian yang disepakati bersama saat konsultasi.'},
+  {q:'Apakah ada garansi revisi setelah website jadi?', a:'Ada. Jumlah revisi disepakati bersama di awal, dan Anda tetap bisa berkonsultasi ringan setelah website tayang.'},
+];
+const faqList = document.getElementById('faqList');
+faqs.forEach(f=>{
+  const item = document.createElement('div');
+  item.className='faq-item glass';
+  item.innerHTML = `
+    <div class="faq-q"><h4>${f.q}</h4><i class="fa-solid fa-plus"></i></div>
+    <div class="faq-a"><p>${f.a}</p></div>`;
+  const q = item.querySelector('.faq-q');
+  const a = item.querySelector('.faq-a');
+  q.addEventListener('click', ()=>{
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el=>{ el.classList.remove('open'); el.querySelector('.faq-a').style.maxHeight=null; });
+    if(!isOpen){ item.classList.add('open'); a.style.maxHeight = a.scrollHeight+'px'; }
+  });
+  faqList.appendChild(item);
+});
+
+/* ---------- STATS COUNTER ---------- */
+const counters = document.querySelectorAll('.stat-num[data-count]');
+const counterObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const el = entry.target;
+      const target = parseFloat(el.dataset.count);
+      const suffix = el.dataset.suffix || '';
+      let cur=0;
+      const step = ()=>{
+        cur += Math.max(target/50, 0.5);
+        if(cur>=target){ el.textContent = target+suffix; return; }
+        el.textContent = Math.round(cur)+suffix;
+        requestAnimationFrame(step);
+      };
+      step();
+      counterObserver.unobserve(el);
+    }
+  });
+}, {threshold:0.5});
+counters.forEach(c=>counterObserver.observe(c));
+</script>
+</body>
 </html>
