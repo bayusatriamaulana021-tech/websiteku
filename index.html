@@ -26,8 +26,8 @@
   --yellow:#FFC94A;
   --grad-1: linear-gradient(120deg,#6C4CF1 0%, #9B6BFF 55%, #4B2FD1 100%);
   --grad-warm: linear-gradient(120deg,#FF6152, #FF9152);
-  --shadow-lg: 0 30px 70px -24px rgba(76,45,209,0.28);
-  --shadow-sm: 0 10px 26px -12px rgba(76,45,209,0.22);
+  --shadow-lg:0 18px 40px -20px rgba(76,45,209,.18);
+  --shadow-sm:0 6px 16px -10px rgba(76,45,209,.15);
   --radius: 20px;
   --font-display:'Sora', sans-serif;
   --font-body:'Plus Jakarta Sans', sans-serif;
@@ -93,7 +93,7 @@ section{position:relative;padding:120px 0;}
 .glass{
   background:linear-gradient(160deg, rgba(255,255,255,0.92), rgba(255,255,255,0.72));
   border:1px solid var(--line);
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(16px);
   border-radius:var(--radius);
   box-shadow:var(--shadow-sm);
@@ -128,23 +128,16 @@ section{position:relative;padding:120px 0;}
 @media (max-width:900px){ #cursor-dot,#cursor-ring{display:none;} }
 
 /* ============ BACKDROP FX ============ */
-#particles{position:fixed;inset:0;z-index:0;}
+@media(max-width:768px){
 .aurora{
-  position:fixed;inset:-20%;z-index:0;
-  background:
-    radial-gradient(38% 32% at 15% 15%, rgba(108,76,241,0.16), transparent 60%),
-    radial-gradient(34% 28% at 85% 10%, rgba(255,97,82,0.14), transparent 60%),
-    radial-gradient(42% 36% at 60% 85%, rgba(255,201,74,0.16), transparent 60%);
-  filter:blur(60px);
-  animation:auroraShift 22s ease-in-out infinite alternate;
-  pointer-events:none;
+display:none;
 }
-@keyframes auroraShift{ 0%{ transform:translate(0,0) rotate(0deg) scale(1); } 100%{ transform:translate(3%,-4%) rotate(8deg) scale(1.08); } }
+}
+
+@media(max-width:768px){
 .grid-overlay{
-  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
-  background-image: linear-gradient(rgba(21,15,46,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(21,15,46,0.045) 1px, transparent 1px);
-  background-size:56px 56px;
-  mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
+display:none;
+}
 }
 #scroll-progress{ position:fixed;top:0;left:0;height:3px;background:var(--grad-1);z-index:9997;width:0%; box-shadow:0 0 12px rgba(108,76,241,.55); }
 
@@ -462,7 +455,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);position:relative;z-index
       <div class="hero-role reveal"><span id="typed"></span><span class="type-cursor">|</span></div>
       <p class="hero-line reveal">Butuh website yang tampil profesional tanpa bikin kantong bolong? Anda di tempat yang tepat. Setiap proyek saya kerjakan dengan detail, cepat, dan harga yang selalu bisa didiskusikan sampai Anda benar-benar sreg.</p>
       <div class="hero-actions reveal">
-        <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20tertarik%20dengan%20jasa%20pembuatan%20website.%20Boleh%20info%20%26%20nego%20harganya%3F" target="_blank" class="btn-primary magnetic"><span>Chat &amp; Nego Harga</span> <i class="fa-brands fa-whatsapp"></i></a>
+        <a href="https://wa.me/62895321578148?text=Halo%20Kak%2C%20saya%20tertarik%20dengan%20jasa%20pembuatan%20website.%20Boleh%20info%20%26%20nego%20harganya%3F" target="_blank" class="btn-primary magnetic"><span>Chat &amp; Nego Harga</span> <i class="fa-brands fa-whatsapp"></i></a>
         <a href="#harga" class="btn-ghost magnetic"><span>Lihat Paket Layanan</span></a>
       </div>
       <div class="hero-meta reveal">
@@ -569,7 +562,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);position:relative;z-index
           <li><i class="fa-solid fa-circle-check"></i> Formulir kontak / WhatsApp</li>
           <li><i class="fa-solid fa-circle-check"></i> Revisi sesuai kesepakatan</li>
         </ul>
-        <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20Landing%20Page." target="_blank" class="btn-ghost">Konsultasi &amp; Nego</a>
+        <a href="https://wa.me/62895321578148?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20Landing%20Page." target="_blank" class="btn-ghost">Konsultasi &amp; Nego</a>
       </div>
 
       <div class="price-card glass pop">
@@ -586,7 +579,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);position:relative;z-index
           <li><i class="fa-solid fa-circle-check"></i> Revisi sesuai kesepakatan</li>
           <li><i class="fa-solid fa-circle-check"></i> Pendampingan pasca rilis</li>
         </ul>
-        <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20Company%20Profile%20%2F%20Sekolah." target="_blank" class="btn-primary">Konsultasi &amp; Nego</a>
+        <a href="https://wa.me/62895321578148?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20Company%20Profile%20%2F%20Sekolah." target="_blank" class="btn-primary">Konsultasi &amp; Nego</a>
       </div>
 
       <div class="price-card glass">
@@ -601,7 +594,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);position:relative;z-index
           <li><i class="fa-solid fa-circle-check"></i> Integrasi WhatsApp / kontak</li>
           <li><i class="fa-solid fa-circle-check"></i> Revisi sesuai kesepakatan</li>
         </ul>
-        <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20UMKM%20%2F%20Portofolio%20%2F%20Custom." target="_blank" class="btn-ghost">Konsultasi &amp; Nego</a>
+        <a href="https://wa.me/62895321578148?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20paket%20UMKM%20%2F%20Portofolio%20%2F%20Custom." target="_blank" class="btn-ghost">Konsultasi &amp; Nego</a>
       </div>
     </div>
     <div class="reveal" style="margin-top:56px;">
@@ -729,7 +722,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);position:relative;z-index
         <span>Chat Langsung, Respon Cepat</span>
         <strong>0895-3215-78148</strong>
       </div>
-      <a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20tertarik%20dengan%20jasa%20pembuatan%20website.%20Boleh%20info%20%26%20nego%20harganya%3F" target="_blank" class="btn-primary magnetic"><span>Chat via WhatsApp</span> <i class="fa-brands fa-whatsapp"></i></a>
+      <a href="https://wa.me/62895321578148?text=Halo%20Kak%2C%20saya%20tertarik%20dengan%20jasa%20pembuatan%20website.%20Boleh%20info%20%26%20nego%20harganya%3F" target="_blank" class="btn-primary magnetic"><span>Chat via WhatsApp</span> <i class="fa-brands fa-whatsapp"></i></a>
     </div>
 
     <div class="contact-cards-row reveal-stagger">
@@ -751,7 +744,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);position:relative;z-index
   </div>
 </footer>
 
-<a href="https://wa.me/6289532157814?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20harga%20jasa%20website." target="_blank" class="fab-wa" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+<a href="https://wa.me/62895321578148?text=Halo%20Kak%2C%20saya%20mau%20tanya%20%26%20nego%20harga%20jasa%20website." target="_blank" class="fab-wa" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
 <button class="fab-top" id="backTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
 
 <svg width="0" height="0" style="position:absolute">
@@ -773,7 +766,7 @@ window.addEventListener('load', ()=>{
     document.getElementById('loader').classList.add('hide');
     document.body.style.cursor = window.innerWidth>900 ? 'none' : 'auto';
     revealCheck();
-  }, 1400);
+  }, 500);
 });
 
 /* ---------- CUSTOM CURSOR ---------- */
@@ -806,37 +799,56 @@ document.querySelectorAll('.magnetic').forEach(btn=>{
 });
 
 /* ---------- PARTICLES CANVAS ---------- */
+if (window.innerWidth > 768) {
+
 const canvas = document.getElementById('particles');
 const ctx = canvas.getContext('2d');
 let W,H, particles=[];
-function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
-resize(); window.addEventListener('resize', resize);
-const COUNT = window.innerWidth<700 ? 30 : 65;
-for(let i=0;i<COUNT;i++){
-  particles.push({ x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-0.5)*0.22, vy:(Math.random()-0.5)*0.22, r:Math.random()*1.6+0.5 });
+
+function resize(){
+  W=canvas.width=window.innerWidth;
+  H=canvas.height=window.innerHeight;
 }
+resize();
+window.addEventListener('resize', resize);
+
+const COUNT = 65;
+
+for(let i=0;i<COUNT;i++){
+  particles.push({
+    x:Math.random()*W,
+    y:Math.random()*H,
+    vx:(Math.random()-0.5)*0.22,
+    vy:(Math.random()-0.5)*0.22,
+    r:Math.random()*1.6+0.5
+  });
+}
+
 function drawParticles(){
   ctx.clearRect(0,0,W,H);
+
   ctx.fillStyle='rgba(108,76,241,0.38)';
+
   for(const p of particles){
-    p.x+=p.vx; p.y+=p.vy;
-    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    p.x+=p.vx;
+    p.y+=p.vy;
+
+    if(p.x<0)p.x=W;
+    if(p.x>W)p.x=0;
+    if(p.y<0)p.y=H;
+    if(p.y>H)p.y=0;
+
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fill();
   }
-  for(let i=0;i<particles.length;i++){
-    for(let j=i+1;j<particles.length;j++){
-      const a=particles[i], b=particles[j];
-      const d = Math.hypot(a.x-b.x, a.y-b.y);
-      if(d<120){
-        ctx.strokeStyle = `rgba(255,97,82,${0.10*(1-d/120)})`;
-        ctx.lineWidth=1;
-        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke();
-      }
-    }
-  }
+
   requestAnimationFrame(drawParticles);
 }
+
 drawParticles();
+
+}
 
 /* ---------- SCROLL PROGRESS + NAVBAR ---------- */
 const navbar = document.getElementById('navbar');
