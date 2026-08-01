@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
 
+# Izinkan semua bot crawler utama untuk mengindeks seluruh halaman
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
 Sitemap: https://maulanabayusatria.my.id/sitemap.xml
